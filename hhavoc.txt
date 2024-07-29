@@ -1,0 +1,7 @@
+"hhavoc"
+{
+	"base"		"base"
+	"title"		"Havoc"
+	"category"	"pve"
+	"menusystem"	"1"
+}
