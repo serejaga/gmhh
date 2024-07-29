@@ -19,6 +19,15 @@ function GM:OnScreenSizeChanged( oldW, oldH, newW, newH )
     cl.screen = { w = newW, h = newH }
 end
 
+/* Setup fonts */
+surface.CreateFont( "SubjectIsDead", {
+	font = "Roboto Bk", 
+	size = 32,
+	weight = 500,
+	additive = true,
+} )
+
+
 /* HUDShouldDraw: Called when the Gamemode is about to draw a given element on the client's HUD */
 local allowed = { ["CHudGMod"] = true, ["NetGraph"] = true }
 
@@ -43,9 +52,9 @@ function GM:HUDPaintBackground()
 end
 
 /* HUDPaint: Called whenever the HUD should be drawn, this is the ideal place to draw custom HUD elements */
-local health, armor = 256, 256 
+local health, armor, progress = 0, 0, 0
 function GM:HUDPaint()
-    local ratio, alpha, time 
+    local ratio, alpha, time, str, tw, th
     local screen = cl.screen
 
     -- validate local player 
@@ -55,6 +64,39 @@ function GM:HUDPaint()
         return 
     end
 
+    -- prevent farther hud rendering if player died 
+    if not ply:Alive() then
+        local x, y = math.floor( screen.w / 2 ), math.floor( screen.h / 2 )
+
+        -- draw black rect 
+        surface.SetDrawColor( 0, 0, 0, progress * 220 )
+        surface.DrawRect( 0, 0, screen.w, screen.h )
+
+        -- prepare to draw text
+        surface.SetFont( "SubjectIsDead" )
+        surface.SetTextColor( 150, 55, 55 )
+
+        str = string.format( "Subject: %s", ply:Name() )
+        tw, th = surface.GetTextSize( str )
+
+        surface.SetTextPos( x - math.floor( tw / 2 ), y - math.floor( th / 2 ) )
+
+        -- draw clipped text 
+        x, y = surface.GetTextPos()
+
+        render.SetScissorRect( x, y, x + math.ceil( tw * progress ), y + th, true )
+            surface.DrawText( str )
+        render.SetScissorRect( 0, 0, 0, 0, false )
+
+        -- progress
+        progress = math.Approach( progress, 1, FrameTime() / 5 )
+
+        return 
+    end
+
+    progress = 0
+
+    -- used to make blinking effect
     time = math.sin( SysTime() * 3 )
 
     -- health indicators 

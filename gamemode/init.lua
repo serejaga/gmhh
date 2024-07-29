@@ -33,3 +33,8 @@ function GM:StartCommand( ply, CUserCmd )
         commandQueue[ ply ] = false 
     end
 end
+
+/* GetFallDamage: Called when a player takes damage from falling, allows to override the damage */
+function GM:GetFallDamage( ply, iSpeed )
+    return math.floor( iSpeed / 8 )
+end
