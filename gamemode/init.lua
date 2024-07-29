@@ -20,10 +20,10 @@ function GM:PlayerInitialSpawn( ply, bTransition )
 end
 
 /* PlayerSpawn: Called whenever a player spawns, including respawns. */
-
 function GM:PlayerSpawn( ply, bTransition )
     gm.char.OnSpawn( ply )
 
+    -- default weapon for all players
     ply:Give( "weapon_fists" )
 end
 
