@@ -45,7 +45,7 @@ function PLY:Giveinv(id)
 	end
 
 end
-
+  
 hook.Add("PlayerSay","SayDroppls",function(ply,text) 
 
 	if text == "/drop" then
