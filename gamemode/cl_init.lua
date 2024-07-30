@@ -3,7 +3,7 @@ include( "shared.lua" )
 -- character 
 include( "modules/character/sh_character.lua" ) 
 include( "modules/inv/cl/panelinv.lua" ) 
-
+include( "modules/daynight/all/cl_init.lua" ) 
 
 -- client global table 
 cl = cl or { localplayer = NULL, stamina = 0, bDisabled = false }
