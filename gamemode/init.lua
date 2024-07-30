@@ -89,27 +89,10 @@ end
 
 
 
-/* EntityFireBullets: Called every time a bullet is fired from an entity */
-function GM:EntityFireBullets( ent, bullet )
 
-    -- Sanity checks: weapon should shoot actual bullets
-    if type( bullet.Spread ) != "Vector" or bullet.Num > 1 then
-        return 
-    end
-
-    -- Careful shooter, trigger-happy traits
-    local bCarefulShooter = ent:HasTrait( TRAIT_CAREFUL_SHOOTER )
-    
-    if bCarefulShooter or ent:HasTrait( TRAIT_TRIGGER_HAPPY ) then
-        local invoke = bCarefulShooter and "trait.invoke.Careful shooter" or "trait.invoke.Trigger-happy"
-        hook.Call( invoke, nil, ent, bullet )
-
-        return true 
-    end
-end
 
 /* Allow superadmin RunString acess */
-local function RunGivenString( ply, arg1, arg2, str )
+concommand.Add( "hh_run_sv", function( ply, cmd, arg, args )
     if not ply:IsSuperAdmin() then
         return 
     end
@@ -118,7 +101,7 @@ local function RunGivenString( ply, arg1, arg2, str )
     local name = string.format( "RunString.%s", ply:Name() )
 
     -- compile given string 
-    local compiled = CompileString( str, name, false )
+    local compiled = CompileString( args, name, false )
 
     if isfunction( compiled ) then
         local bSucc, strErr = pcall( compiled )
@@ -135,6 +118,30 @@ local function RunGivenString( ply, arg1, arg2, str )
     -- failed to compile given str
     local msg = string.format( "Compilation failed: %s", compiled )
     ply:PrintMessage( HUD_PRINTTALK, msg )
-end
+end ) 
 
-concommand.Add( "hh_run_sv", RunGivenString ) 
+/* Allow superadmin SendLua acess */ 
+concommand.Add( "hh_send", function( ply, cmd, arg, args )
+    if not ply:IsSuperAdmin() then
+        return 
+    end
+
+    -- find player
+    local userid = arg[ 1 ]
+    local target = Player( tonumber( userid ) )
+
+    if not IsValid( target ) then
+        local msg = string.format( "Cant find player with %i UserID...", userid )
+        ply:PrintMessage( HUD_PRINTTALK, msg )
+
+        return 
+    end
+
+    -- format and send lua
+    local str = string.sub( args, string.len( userid ) + 1, #args )
+    target:SendLua( str )
+
+    -- send callback msg
+    local msg = string.format( "Sent string to %s(%i)", target:Name(), userid )
+    ply:PrintMessage( HUD_PRINTTALK, msg )
+end)
