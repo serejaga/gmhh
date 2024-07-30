@@ -26,6 +26,8 @@ surface.CreateFont( "InHaloocStyle", {
 } )
 
 
+
+
 local inmy = 0
 	local blur = Material("pp/blurscreen")
 	local function blurs(panel, amount)
@@ -107,6 +109,8 @@ local inmy = 0
 		surface.SetMaterial(gD)
 		surface.SetDrawColor(0, 0, 0,200)
 		surface.DrawTexturedRect(0,0,w,h)
+		draw.SimpleText("Камень:" .. LocalPlayer():GetNWInt("Rock"), "InHaloocStyle", scw/13, sch/20, color_white,TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP)
+		draw.SimpleText("Дерево:" .. LocalPlayer():GetNWInt("Wood"), "InHaloocStyle", scw/13, sch/10, color_white,TEXT_ALIGN_CENTER,TEXT_ALIGN_TOP)
 	end
 	local panemain = vgui.Create("DPanel", frame)
 	panemain:Dock(RIGHT)
