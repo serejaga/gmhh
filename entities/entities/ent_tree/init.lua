@@ -30,13 +30,3 @@ hook.Add("EntityTakeDamage", "treedrop", function(target,dmginfo)
 
 end)
 
-
-
-local ent = ents.Create("ent_stone")
-
-
-ent:SetPos(Entity(1):GetPos())
-
-ent:Spawn()
-Entity(1):StripWeapons()
-Entity(1):Give("weapon_crowbar")
