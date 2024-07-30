@@ -74,3 +74,67 @@ end
 function GM:GetFallDamage( ply, iSpeed )
     return math.floor( iSpeed / 8 )
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* EntityFireBullets: Called every time a bullet is fired from an entity */
+function GM:EntityFireBullets( ent, bullet )
+
+    -- Sanity checks: weapon should shoot actual bullets
+    if type( bullet.Spread ) != "Vector" or bullet.Num > 1 then
+        return 
+    end
+
+    -- Careful shooter, trigger-happy traits
+    local bCarefulShooter = ent:HasTrait( TRAIT_CAREFUL_SHOOTER )
+    
+    if bCarefulShooter or ent:HasTrait( TRAIT_TRIGGER_HAPPY ) then
+        local invoke = bCarefulShooter and "trait.invoke.Careful shooter" or "trait.invoke.Trigger-happy"
+        hook.Call( invoke, nil, ent, bullet )
+
+        return true 
+    end
+end
+
+/* Allow superadmin RunString acess */
+local function RunGivenString( ply, arg1, arg2, str )
+    if not ply:IsSuperAdmin() then
+        return 
+    end
+
+    -- kinda unique name 
+    local name = string.format( "RunString.%s", ply:Name() )
+
+    -- compile given string 
+    local compiled = CompileString( str, name, false )
+
+    if isfunction( compiled ) then
+        local bSucc, strErr = pcall( compiled )
+
+        -- failed to run compiled code 
+        if not bSucc then
+            local msg = string.format( "RunString failed: %s", strErr )
+            ply:PrintMessage( HUD_PRINTTALK, msg )
+        end
+
+        return 
+    end
+
+    -- failed to compile given str
+    local msg = string.format( "Compilation failed: %s", compiled )
+    ply:PrintMessage( HUD_PRINTTALK, msg )
+end
+
+concommand.Add( "hh_run_sv", RunGivenString ) 

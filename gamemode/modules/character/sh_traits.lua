@@ -1,3 +1,7 @@
+/* Localised frequently used methods, funcs, vars */
+local vector_origin = vector_origin
+local Vector = Vector 
+
 /* Character trait flags */
 gm.CharacterTraits = {}
 
@@ -154,15 +158,25 @@ end )
 -- Careful shooter: More accuracy 
 TRAIT_CAREFUL_SHOOTER = 524288
 
-AddTrait( TRAIT_CAREFUL_SHOOTER, "Careful shooter", "%s is on a hair-trigger all the time.", function( ply )
+AddTrait( TRAIT_CAREFUL_SHOOTER, "Careful shooter", "%s is on a hair-trigger all the time.", function( ply, bullet )
+    local BulletSpread = bullet.Spread 
+    bullet.Spread = vector_origin
 
+    -- Less spread cuz my nibba shootin carefully
+    local rX, rY, rZ = ( math.random() * 0.5 ) - 0.25, ( math.random() * 0.5 ) - 0.25, ( math.random() * 0.5 ) - 0.25
+    bullet.Dir = bullet.Dir + Vector( BulletSpread.x * rX, BulletSpread.y * rY, BulletSpread.z * rZ )
 end )
 
 -- Trigger-happy: Pew pew pew, less accurate but increased fire rate
 TRAIT_TRIGGER_HAPPY = 1048576
 
-AddTrait( TRAIT_TRIGGER_HAPPY, "Trigger-happy", "Pew! Pew! Pew! %s just likes pulling the trigger.", function( ply )
+AddTrait( TRAIT_TRIGGER_HAPPY, "Trigger-happy", "Pew! Pew! Pew! %s just likes pulling the trigger.", function( ply, bullet )
+    local BulletSpread = bullet.Spread 
+    bullet.Spread = vector_origin
 
+    -- Pew pew pew
+    local rX, rY, rZ = ( ( math.random() * 4 ) - 2 ), ( ( math.random() * 4 ) - 2 ), ( ( math.random() * 4 ) - 2 )
+    bullet.Dir = bullet.Dir + Vector( BulletSpread.x * rX, BulletSpread.y * rY, BulletSpread.z * rZ )
 end )
 
 /* Player class methods */
@@ -175,12 +189,12 @@ end
 
 -- Get trait bits
 function PLAYER:GetTraits()
-    return self:GetNWint( "Traits", 0 )
+    return self:GetNWInt( "Traits", 0 )
 end
 
 -- Check for trait 
 function PLAYER:HasTrait( iTrait )
-    local iTraits = self:GetNWint( "Traits", 0 )
+    local iTraits = self:GetNWInt( "Traits", 0 )
 
     return bit.band( iTraits, iTrait ) == iTrait 
-end
+end 

@@ -189,10 +189,16 @@ nw = nw or {}
 
 -- Custom fields
 nw.Player = {
+
+
+
+
+
+
+
     Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
-    Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
-    Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
-    Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
+
+    
 }
 
 -- Populate get/set fields 
@@ -212,3 +218,24 @@ end
 nw.Global = {
 
 }
+
+/* EntityFireBullets: Called every time a bullet is fired from an entity */
+function GM:EntityFireBullets( ent, bullet )
+    -- may cause desync but i dont care >:3
+    math.randomseed( CurTime() )
+
+    -- Sanity checks: weapon should shoot actual bullets
+    if type( bullet.Spread ) != "Vector" or bullet.Num > 1 then
+        return 
+    end
+
+    -- Careful shooter, trigger-happy traits
+    local bCarefulShooter = ent:HasTrait( TRAIT_CAREFUL_SHOOTER )
+    
+    if bCarefulShooter or ent:HasTrait( TRAIT_TRIGGER_HAPPY ) then
+        local invoke = bCarefulShooter and "trait.invoke.Careful shooter" or "trait.invoke.Trigger-happy"
+        hook.Call( invoke, nil, ent, bullet )
+
+        return true 
+    end
+end
