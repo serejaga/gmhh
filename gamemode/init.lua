@@ -5,6 +5,9 @@ include( "shared.lua" )
 AddCSLuaFile( "modules/character/sh_character.lua" ) 
 include( "modules/character/sh_character.lua" ) 
 
+-- networking 
+include( "modules/networking/sv_networking.lua" ) 
+
 -- server global table 
 sv = sv or {}
 
@@ -31,6 +34,30 @@ end
 function GM:StartCommand( ply, CUserCmd )
     if commandQueue[ ply ] and not CUserCmd:IsForced() then
         commandQueue[ ply ] = false 
+    end
+
+    -- check for stamina
+    ply.flLastOutOfStamina = ply.flLastOutOfStamina or 0
+    local iStamina = ply:GetNWInt( "Stamina", 0 )
+
+    if iStamina < 1 then
+        CUserCmd:RemoveKey( IN_SPEED )
+    end
+
+    -- remove stamina points 
+    local bInSpeed = CUserCmd:KeyDown( IN_SPEED )
+    local flForwardMove, flSideMove = CUserCmd:GetForwardMove(), CUserCmd:GetSideMove()
+
+    if bInSpeed and ( math.abs( flForwardMove ) > 0 or math.abs( flSideMove ) > 0 ) then
+        iStamina = math.Approach( iStamina, 0, 1 )
+        ply:SetNWInt( "Stamina", iStamina )
+
+        if iStamina == 0 and ply.flLastOutOfStamina < SysTime() then
+            ply.flLastOutOfStamina = SysTime()
+        end
+    elseif ( SysTime() - ply.flLastOutOfStamina ) > 5 then
+        iStamina = math.Approach( iStamina, 100, 2 )
+        ply:SetNWInt( "Stamina", iStamina )
     end
 end
 

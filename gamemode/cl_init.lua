@@ -3,8 +3,45 @@ include( "shared.lua" )
 -- character 
 include( "modules/character/sh_character.lua" ) 
 
+
 -- client global table 
-cl = cl or {}
+cl = cl or { localplayer = NULL, stamina = 0, bDisabled = false }
+
+/* HUD cant get disabled by the server */
+cl.bDisabled = false 
+
+net.Receive( "s2c.sethud", function()
+    cl.bDisabled = net.ReadBool()
+end )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Cached IMaterial */
 local gradient_down = Material( "vgui/gradient_down", "noclamp smooth" )
@@ -39,6 +76,28 @@ end
 function GM:HUDPaintBackground()
     local screen = cl.screen
 
+    -- prevent HUD rendering if server told so 
+    if cl.bDisabled then
+        surface.SetDrawColor( 0, 0, 0, 128 )
+        surface.DrawRect( 0, 0, screen.w, screen.h )
+
+        return 
+    end
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
     -- render simple vignette
     local vignette_size = math.floor( screen.h / 6 )
 
@@ -52,10 +111,11 @@ function GM:HUDPaintBackground()
 end
 
 /* HUDPaint: Called whenever the HUD should be drawn, this is the ideal place to draw custom HUD elements */
-local health, armor, progress = 0, 0, 0
+local health, armor, stamina, progress = 0, 0, 0, 0
 function GM:HUDPaint()
     local ratio, alpha, time, str, tw, th
     local screen = cl.screen
+    local x, y = math.floor( screen.w / 2 ), math.floor( screen.h / 2 )
 
     -- validate local player 
     local ply = LocalPlayer()
@@ -64,10 +124,10 @@ function GM:HUDPaint()
         return 
     end
 
+    cl.localplayer = ply
+
     -- prevent farther hud rendering if player died 
     if not ply:Alive() then
-        local x, y = math.floor( screen.w / 2 ), math.floor( screen.h / 2 )
-
         -- draw black rect 
         surface.SetDrawColor( 0, 0, 0, progress * 220 )
         surface.DrawRect( 0, 0, screen.w, screen.h )
@@ -130,6 +190,28 @@ function GM:HUDPaint()
         surface.DrawRect( 28, screen.h - 52, armor, 8 )
     else
         armor = 0
+    end
+
+    -- stamina indicator
+    ratio = cl.stamina / 100
+    stamina = Lerp( 0.05, stamina, ratio * 256 )
+    stamina = math.Clamp( stamina, 0, 254 )
+
+    if cl.stamina < 100 then
+        surface.SetDrawColor( 16, 16, 16, 220 )
+        surface.DrawRect( x - 128, 8, 256, 8 )
+        
+        surface.SetDrawColor( 200, 255, 135 )
+        surface.DrawRect( x - 126, 10, stamina, 4 )
+    end
+end
+
+/* StartCommand: Allows you to change the players inputs before they are processed by the server. */
+function GM:StartCommand( ply, CUserCmd )
+    cl.stamina = ply:GetNWInt( "Stamina", 0 )
+
+    if cl.stamina < 1 then
+        CUserCmd:RemoveKey( IN_SPEED )
     end
 end
 
