@@ -1,6 +1,20 @@
 /* hh character system, made by @surelyreplica */
 gm.char = {}
 
+-- trait system 
+include( "sh_traits.lua" )
+
+
+
+
+
+ 
+
+
+
+
+
+
 /* base character fields */
 local base = {
     -- name field: first, last, nick 
@@ -43,11 +57,6 @@ local backstories = {
 
 local BACKSTORY_COUNT = #backstories 
 
-/* traits */
-local traits = {
-    1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384
-}
-
 /* Handle player spawn */
 function gm.char.OnSpawn( ply )
     ply.character = {
@@ -73,14 +82,15 @@ function gm.char.OnSpawn( ply )
 
     ply:SetupHands()
 
-    -- traits 
+    -- Apply random traits  
     local bitTraits = 0
 
     for i = 1, math.random( 1, 3 ) do
-        bitTraits = bit.bor( bitTraits, traits[ math.random( 1, #traits ) ] )
-    end
+        bitTraits = bit.bor( bitTraits, gm.CharacterTraits[ math.random( 1, #gm.CharacterTraits ) ].index )
+    end 
     
     ply.character.traits = bitTraits
+    print(bitTraits)
 
     -- backstory given weapon 
     if data.loadout then

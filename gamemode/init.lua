@@ -3,6 +3,8 @@ include( "shared.lua" )
 
 -- character system 
 AddCSLuaFile( "modules/character/sh_character.lua" ) 
+AddCSLuaFile( "modules/character/sh_traits.lua" ) 
+
 AddCSLuaFile( "modules/inv/cl/panelinv.lua" ) 
 AddCSLuaFile( "modules/daynight/all/cl_init.lua" ) 
 include( "modules/character/sh_character.lua" ) 
@@ -25,6 +27,7 @@ local commandQueue = {} -- wait for first command b4 player "actually spawns", s
 
 function GM:PlayerInitialSpawn( ply, bTransition ) 
     commandQueue[ ply ] = true 
+    ply:KillSilent()
 end
 
 /* PlayerSpawn: Called whenever a player spawns, including respawns. */
@@ -39,6 +42,7 @@ end
 function GM:StartCommand( ply, CUserCmd )
     if commandQueue[ ply ] and not CUserCmd:IsForced() then
         commandQueue[ ply ] = false 
+        ply:Spawn()
     end
 
     -- check for stamina

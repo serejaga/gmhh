@@ -3,6 +3,35 @@ GM.Author 	= "replica"
 GM.Email 	= "@surelyreplica"
 GM.Website 	= "github.com/serejaga"
 
+/* Store frequently used variables, functions */
+local PLAYER = FindMetaTable( "Player" )
+local ENTITY = FindMetaTable( "Entity" )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- shared global table 
 gm = gm or {}
 
@@ -146,5 +175,40 @@ gm.models = {
     zombie_combine = "models/player/zombie_soldier.mdl"
 }
 
--- shared networking 
+/* Shared networking */
 nw = nw or {}
+
+
+
+
+
+
+
+
+
+
+-- Custom fields
+nw.Player = {
+    Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
+    Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
+    Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
+    Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
+}
+
+-- Populate get/set fields 
+for key, method in pairs( nw.Player ) do
+    -- set method
+    PLAYER[ "Set" .. key ] = function( self, value )
+        method.Set( self, key, value )
+    end
+
+    -- get method 
+    PLAYER[ "Get" .. key ] = function( self )
+        return method.Get( self, key, method.fallback )
+    end
+end
+
+-- Global variables 
+nw.Global = {
+
+}
