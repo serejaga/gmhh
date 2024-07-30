@@ -3,7 +3,10 @@ include( "shared.lua" )
 
 -- character system 
 AddCSLuaFile( "modules/character/sh_character.lua" ) 
+AddCSLuaFile( "modules/inv/cl/panelinv.lua" ) 
 include( "modules/character/sh_character.lua" ) 
+include( "modules/inv/sv/sv_loaddate.lua" ) 
+include( "modules/inv/sv/sv_invfunc.lua" ) 
 
 -- networking 
 include( "modules/networking/sv_networking.lua" ) 

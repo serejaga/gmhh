@@ -2,6 +2,7 @@ include( "shared.lua" )
 
 -- character 
 include( "modules/character/sh_character.lua" ) 
+include( "modules/inv/cl/panelinv.lua" ) 
 
 
 -- client global table 
