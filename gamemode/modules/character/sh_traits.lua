@@ -200,3 +200,23 @@ function PLAYER:HasTrait( iTrait )
 
     return bit.band( iTraits, iTrait ) == iTrait 
 end 
+
+-- Give random traits 
+function PLAYER:GiveRandomTraits()
+    local iTraitsLeft, iTraits = math.random( 0, 4 ), 0
+
+    -- Cycle through traits 
+    while iTraitsLeft > 1 do
+        local iRandomTrait = gm.CharacterTraits[ math.random( 1, #gm.CharacterTraits ) ]
+
+        if self:HasTrait( iRandomTrait ) then
+            continue 
+        end
+
+        iTraits = bit.bor( iTraits, iRandomTrait )
+        iTraitsLeft = iTraitsLeft - 1 
+    end
+
+    -- Set traits
+    self:SetTraits( iTraits )
+end
