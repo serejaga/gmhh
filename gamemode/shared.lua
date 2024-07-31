@@ -175,49 +175,8 @@ gm.models = {
     zombie_combine = "models/player/zombie_soldier.mdl"
 }
 
-/* Shared networking */
-nw = nw or {}
 
 
-
-
-
-
-
-
-
-
--- Custom fields
-nw.Player = {
-
-
-
-
-
-
-
-    Stamina = { Set = ENTITY.SetNWInt, Get = ENTITY.GetNWInt, fallback = 100 },
-
-    
-}
-
--- Populate get/set fields 
-for key, method in pairs( nw.Player ) do
-    -- set method
-    PLAYER[ "Set" .. key ] = function( self, value )
-        method.Set( self, key, value )
-    end
-
-    -- get method 
-    PLAYER[ "Get" .. key ] = function( self )
-        return method.Get( self, key, method.fallback )
-    end
-end
-
--- Global variables 
-nw.Global = {
-
-}
 
 /* EntityFireBullets: Called every time a bullet is fired from an entity */
 function GM:EntityFireBullets( ent, bullet )

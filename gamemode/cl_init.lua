@@ -2,11 +2,53 @@ include( "shared.lua" )
 
 -- character 
 include( "modules/character/sh_character.lua" ) 
-include( "modules/inv/cl/panelinv.lua" ) 
-include( "modules/daynight/all/cl_init.lua" ) 
+include( "modules/daynight/sh_daytime.lua" ) 
 
 -- client global table 
 cl = cl or { localplayer = NULL, stamina = 0, bDisabled = false }
+
+/* extended surface rendering */
+local surface = surface
+
+-- surface.DrawSimpleText
+function surface.DrawSimpleText( x, y, str )
+    surface.SetTextPos( x, y )
+    surface.DrawText( str )
+end
+
+/*  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* HUD cant get disabled by the server */
 cl.bDisabled = false 
@@ -207,6 +249,8 @@ function GM:HUDPaint()
     end
 end
 
+/*  */
+
 /* StartCommand: Allows you to change the players inputs before they are processed by the server. */
 function GM:StartCommand( ply, CUserCmd )
     cl.stamina = ply:GetNWInt( "Stamina", 0 )
@@ -217,3 +261,7 @@ function GM:StartCommand( ply, CUserCmd )
 end
 
 
+/* */
+function GM:Think()
+    gm.DaytimeThink()
+end

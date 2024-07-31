@@ -74,15 +74,15 @@ end )
 -- Wimp: More incoming damage
 TRAIT_WIMP = 64
 
-AddTrait( TRAIT_WIMP, "Wimp", "%s is weak and cowardly. Even a little pain will immobilize her/him.", function( ply )
-
+AddTrait( TRAIT_WIMP, "Wimp", "%s is weak and cowardly. Even a little pain will immobilize her/him.", function( ply, dmg )
+    dmg:ScaleDamage( 1.25 )
 end )
 
 -- Tough: Less incoming damage
 TRAIT_TOUGH = 128
 
-AddTrait( TRAIT_TOUGH, "Tough", "%s has thick skin, dense flesh, and durable bones.", function( ply )
-
+AddTrait( TRAIT_TOUGH, "Tough", "%s has thick skin, dense flesh, and durable bones.", function( ply, dmg )
+    dmg:ScaleDamage( 0.85 )
 end )
 
 -- Too smart: Fast researches
@@ -114,17 +114,19 @@ AddTrait( TRAIT_INDUSTRIOUS, "Industrious", "%s has an easy time staying on-task
 end )
 
 -- Jogger: Movin fast 
-TRAIT_JOGGER = 4096
+TRAIT_JOGGER = 4096 
 
 AddTrait( TRAIT_JOGGER, "Jogger", "%s always moves with a sense of urgency - so much so that others often fail to keep up.", function( ply )
-
+    ply:SetWalkSpeed( math.floor( ply:GetWalkSpeed() * 1.25 ) )
+    ply:SetRunSpeed( math.floor( ply:GetRunSpeed() * 1.15 ) )
 end )
 
 -- Slowpoke: Decreased movement speed 
 TRAIT_SLOWPOKE = 8192
 
 AddTrait( TRAIT_SLOWPOKE, "Slowpoke", "%s is always falling behind the group anywhere.", function( ply )
-
+    ply:SetWalkSpeed( math.floor( ply:GetWalkSpeed() * 0.75 ) )
+    ply:SetRunSpeed( math.floor( ply:GetRunSpeed() * 0.85 ) )
 end )
 
 -- Depressive: мать сдохла продам гораж по 993
