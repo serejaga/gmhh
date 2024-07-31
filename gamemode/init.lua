@@ -18,10 +18,38 @@ include( "modules/daynight/sh_daytime.lua" )
 AddCSLuaFile( "modules/inv/cl/panelinv.lua" ) 
 include( "modules/inv/sv/sv_loaddate.lua" ) 
 include( "modules/inv/sv/sv_invfunc.lua" ) 
-include( "modules/networking/sv_networking.lua" ) 
 
 -- server global table 
 sv = sv or {}
+
+/* Server-to-client networking strings */
+util.AddNetworkString( "s2c.sethud" )       -- Set HUD visibility, should send boolean.
+util.AddNetworkString( "s2c.sethud" )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* Hooked events */
@@ -39,6 +67,9 @@ end
 function GM:PlayerSpawn( ply, bTransition )
     -- Generate character
     ply:GenerateCharacter()
+
+    -- Reset 
+    ply:Extinguish()
 
     -- dispatch 
     local bJogger = ply:HasTrait( TRAIT_JOGGER )
@@ -96,6 +127,17 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmg )
         return 
     end
 
+
+end
+
+/* EntityTakeDamage: Called when an entity takes damage. You can modify all parts of the damage info in this hook. */
+function GM:EntityTakeDamage( ply, dmg )
+    local attacker = dmg:GetAttacker()
+
+    if not attacker:IsPlayer() or attacker == ply then
+        return 
+    end
+
     -- dispatch 
     local bTough = ply:HasTrait( TRAIT_TOUGH )
 
@@ -103,6 +145,17 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmg )
         local invoke = bTough and "trait.invoke.Tough" or "trait.invoke.Wimp"
         hook.Call( invoke, nil, ply, dmg )
     end
+
+    -- Pyro trait 
+    local iRandomChance = math.random( 1, 8 )
+    if attacker:HasTrait( TRAIT_PYROMANIAC ) and iRandomChance == 1 then
+        ply:Ignite( 5, 128 )
+    end
+end
+
+/* PlayerDeath: Called when a player is killed by Player:Kill or any other normal means. */
+function GM:PlayerDeath( ply, inflictor, attacker )
+    ply:Extinguish()
 end
 
 /* Tick: called every tick */

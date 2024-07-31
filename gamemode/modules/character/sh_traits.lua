@@ -46,14 +46,12 @@ end )
 -- Pyromaniac: Randomly ignites enemy
 TRAIT_PYROMANIAC = 8
 
-AddTrait( TRAIT_PYROMANIAC, "Pyromaniac", "%s loves fire and will occasionally go on random fire starting sprees.", function( ply )
-
-end )
+AddTrait( TRAIT_PYROMANIAC, "Pyromaniac", "%s loves fire and will occasionally go on random fire starting sprees." )
 
 -- Cannibal: Allowed to eat children :D
 TRAIT_CANNIBAL = 16 
 
-AddTrait( TRAIT_CANNIBAL, "Pyromaniac", "%s was taught that eating human meat is wrong and horrible. But one time, long ago...", function( ply )
+AddTrait( TRAIT_CANNIBAL, "Cannibal", "%s was taught that eating human meat is wrong and horrible. But one time, long ago...", function( ply )
 
 end )
 
