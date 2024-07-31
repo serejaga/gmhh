@@ -202,12 +202,13 @@ function PLAYER:HasTrait( iTrait )
 end 
 
 -- Give random traits 
+local Traits = gm.CharacterTraits
 function PLAYER:GiveRandomTraits()
     local iTraitsLeft, iTraits = math.random( 0, 4 ), 0
 
     -- Cycle through traits 
     while iTraitsLeft > 1 do
-        local iRandomTrait = gm.CharacterTraits[ math.random( 1, #gm.CharacterTraits ) ]
+        local iRandomTrait = Traits[ math.random( 1, #Traits ) ].index
 
         if self:HasTrait( iRandomTrait ) then
             continue 
@@ -219,4 +220,4 @@ function PLAYER:GiveRandomTraits()
 
     -- Set traits
     self:SetTraits( iTraits )
-end
+end 

@@ -1,7 +1,11 @@
 include( "shared.lua" ) 
 
--- character 
+-- character system 
+include( "modules/character/sh_traits.lua" ) 
+include( "modules/character/sh_backstories.lua" ) 
 include( "modules/character/sh_character.lua" ) 
+
+-- day-time system
 include( "modules/daynight/sh_daytime.lua" ) 
 
 -- client global table 
@@ -16,75 +20,12 @@ function surface.DrawSimpleText( x, y, str )
     surface.DrawText( str )
 end
 
-/*  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* HUD cant get disabled by the server */
 cl.bDisabled = false 
 
 net.Receive( "s2c.sethud", function()
     cl.bDisabled = net.ReadBool()
 end )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Cached IMaterial */
 local gradient_down = Material( "vgui/gradient_down", "noclamp smooth" )
@@ -109,10 +50,15 @@ surface.CreateFont( "SubjectIsDead", {
 
 
 /* HUDShouldDraw: Called when the Gamemode is about to draw a given element on the client's HUD */
-local allowed = { ["CHudGMod"] = true, ["NetGraph"] = true }
+local allowed = { 
+    ["CHudAmmo"] = true,            ["CHudBattery"] = true, 
+    ["CHudCrosshair"] = true,       ["CHudDeathNotice"] = true, 
+    ["CHudHealth"] = true,          ["CHudZoom"] = true, 
+    ["CHudDamageIndicator"] = true, ["CHUDQuickInfo"] = true
+}
 
 function GM:HUDShouldDraw( str )
-    return allowed[ str ]
+    return not allowed[ str ]
 end
 
 /* HUDPaintBackground: Called before GM:HUDPaint when the HUD background is being drawn */
@@ -126,20 +72,6 @@ function GM:HUDPaintBackground()
 
         return 
     end
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
 
     -- render simple vignette
     local vignette_size = math.floor( screen.h / 6 )
@@ -249,8 +181,6 @@ function GM:HUDPaint()
     end
 end
 
-/*  */
-
 /* StartCommand: Allows you to change the players inputs before they are processed by the server. */
 function GM:StartCommand( ply, CUserCmd )
     cl.stamina = ply:GetNWInt( "Stamina", 0 )
@@ -258,10 +188,4 @@ function GM:StartCommand( ply, CUserCmd )
     if cl.stamina < 1 then
         CUserCmd:RemoveKey( IN_SPEED )
     end
-end
-
-
-/* */
-function GM:Think()
-    gm.DaytimeThink()
 end

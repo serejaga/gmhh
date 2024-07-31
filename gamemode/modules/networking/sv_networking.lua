@@ -12,7 +12,7 @@ function PLAYER:Respawn()
 
 end
 
-/* Disable players HUD */
-util.AddNetworkString( "s2c.disablehud" )
+/* Set players HUD state */
+util.AddNetworkString( "s2c.sethud" )
 
 

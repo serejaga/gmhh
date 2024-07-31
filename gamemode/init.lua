@@ -2,17 +2,22 @@ AddCSLuaFile( "shared.lua" )
 include( "shared.lua" )
 
 -- character system 
-AddCSLuaFile( "modules/character/sh_character.lua" ) 
 AddCSLuaFile( "modules/character/sh_traits.lua" ) 
-AddCSLuaFile( "modules/inv/cl/panelinv.lua" ) 
-AddCSLuaFile( "modules/daynight/sh_daytime.lua" ) 
+AddCSLuaFile( "modules/character/sh_backstories.lua" ) 
+AddCSLuaFile( "modules/character/sh_character.lua" ) 
 
+include( "modules/character/sh_traits.lua" ) 
+include( "modules/character/sh_backstories.lua" ) 
 include( "modules/character/sh_character.lua" ) 
-include( "modules/inv/sv/sv_loaddate.lua" ) 
-include( "modules/inv/sv/sv_invfunc.lua" ) 
+
+-- day-time system
+AddCSLuaFile( "modules/daynight/sh_daytime.lua" ) 
 include( "modules/daynight/sh_daytime.lua" ) 
 
--- networking 
+-- shit
+AddCSLuaFile( "modules/inv/cl/panelinv.lua" ) 
+include( "modules/inv/sv/sv_loaddate.lua" ) 
+include( "modules/inv/sv/sv_invfunc.lua" ) 
 include( "modules/networking/sv_networking.lua" ) 
 
 -- server global table 
@@ -32,10 +37,8 @@ end
 
 /* PlayerSpawn: Called whenever a player spawns, including respawns. */
 function GM:PlayerSpawn( ply, bTransition )
-    gm.char.OnSpawn( ply )
-
-    -- default weapon for all players
-    ply:Give( "weapon_fists" )
+    -- Generate character
+    ply:GenerateCharacter()
 
     -- dispatch 
     local bJogger = ply:HasTrait( TRAIT_JOGGER )

@@ -180,24 +180,7 @@ if not CLIENT then
     return 
 end
 
-local ColorVector = Vector( 1, 1, 1 )
-
-function gm.DaytimeThink()
-    -- world modulation 
-    if WorldMaterials then
-        local light = ( iTime - 720 ) / 720 
-
-        ColorVector.x = light
-        ColorVector.y = light
-        ColorVector.z = light
-
-        for i = 1, #WorldMaterials do 
-            WorldMaterials[ i ]:SetVector( "$color", ColorVector )
-        end
-    end
-end 
-
--- Sync light-style values
+-- light-style values
 local function RedownloadLightmaps()
     render.RedownloadAllLightmaps( true, false )
 end
