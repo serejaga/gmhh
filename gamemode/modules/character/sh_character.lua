@@ -29,6 +29,27 @@ function PLAYER:GenerateCharacter()
     -- Give random traits 
     self:GiveRandomTraits()
 
+    -- Tell player given traits 
+    local iTraits, iNumTraits = self:GetTraits(), 0
+
+    local strTraits = ""
+    for i = 1, #gm.CharacterTraits do
+        local Trait = gm.CharacterTraits[ i ]
+
+        if not self:HasTrait( Trait.index ) then
+            continue 
+        end
+
+        strTraits = iNumTraits > 0 and string.format( "%s, %s", strTraits, Trait.str ) or Trait.str
+        iNumTraits = iNumTraits + 1
+    end   
+
+    print( iNumTraits, strTraits )
+    local msg = iNumTraits > 1 and string.format( "%s has %s traits.", self:Name(), strTraits ) or iNumTraits > 0 and string.format( "%s has %s trait.", self:Name(), strTraits )
+        or string.format( "%s has no special traits.", self:Name() ) 
+ 
+    self:PrintMessage(HUD_PRINTTALK, msg )
+
     -- Setup data 
     self:SetModel( mModel )
     self:SetupHands()
