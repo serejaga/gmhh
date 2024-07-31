@@ -90,11 +90,16 @@ end
 
 /* ScalePlayerDamage: This hook allows you to change how much damage a player receives when one takes damage to a specific body part. */
 function GM:ScalePlayerDamage( ply, hitgroup, dmg )
+    local attacker = dmg:GetAttacker()
+
+    if not attacker:IsPlayer() or attacker == ply then
+        return 
+    end
 
     -- dispatch 
-    local bTough = ent:HasTrait( TRAIT_TOUGH )
+    local bTough = ply:HasTrait( TRAIT_TOUGH )
 
-    if bTough or ent:HasTrait( TRAIT_WIMP ) then
+    if bTough or ply:HasTrait( TRAIT_WIMP ) then
         local invoke = bTough and "trait.invoke.Tough" or "trait.invoke.Wimp"
         hook.Call( invoke, nil, ply, dmg )
     end

@@ -12,10 +12,18 @@ function PLAYER:GenerateCharacter()
 
     -- Give character random backstory 
     local Backstory = Backstories[ math.random( 1, #Backstories ) ]
+    PrintTable(Backstory)
 
     -- Backstory related model 
-    if Backstory.model then
-        mModel = Backstory.model[ math.random( 1, #Backstory.model ) ]
+    if Backstory.models then
+        mModel = Backstory.models[ math.random( 1, #Backstory.models ) ]
+    end
+
+    -- Backstory loadouts 
+    if Backstory.loadout then
+        for i = 1, #Backstory.loadout do
+            mLoadOut[ #mLoadOut + 1 ] = Backstory.loadout[ i ]
+        end
     end
 
     -- Give random traits 
