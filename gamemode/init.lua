@@ -1,6 +1,13 @@
 AddCSLuaFile( "shared.lua" )
 include( "shared.lua" )
 
+-- Shared variables 
+AddCSLuaFile( "base/sharedvars/sh_sharedvars.lua" ) 
+AddCSLuaFile( "base/sharedvars/cl_sharedvars.lua" ) 
+
+include( "base/sharedvars/sh_sharedvars.lua" ) 
+include( "base/sharedvars/sv_sharedvars.lua" ) 
+
 -- character system 
 AddCSLuaFile( "modules/character/sh_traits.lua" ) 
 AddCSLuaFile( "modules/character/sh_backstories.lua" ) 
@@ -24,7 +31,8 @@ sv = sv or {}
 
 /* Server-to-client networking strings */
 util.AddNetworkString( "s2c.sethud" )       -- Set HUD visibility, should send boolean.
-util.AddNetworkString( "s2c.sethud" )
+
+util.AddNetworkString( "s2c.update-ls" )     -- Light style updaye notify
 
 
 
@@ -52,8 +60,6 @@ util.AddNetworkString( "s2c.sethud" )
 
 
 
-/* Hooked events */
-local hk = {}
 
 /* PlayerInitialSpawn: Called when the player spawns for the first time. */
 local commandQueue = {} -- wait for first command b4 player "actually spawns", some kind of spawn protection
@@ -61,6 +67,10 @@ local commandQueue = {} -- wait for first command b4 player "actually spawns", s
 function GM:PlayerInitialSpawn( ply, bTransition ) 
     commandQueue[ ply ] = true 
     ply:KillSilent()
+
+
+    -- Define internal variables 
+    ply.Traits = 0 
 end
 
 /* PlayerSpawn: Called whenever a player spawns, including respawns. */

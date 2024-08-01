@@ -1,15 +1,101 @@
 include( "shared.lua" ) 
 
--- character system 
+/* Client global variables */
+cl = cl or {}
+
+-- Shared variables 
+include( "base/sharedvars/sh_sharedvars.lua" ) 
+include( "base/sharedvars/cl_sharedvars.lua" )
+
+-- Character system 
 include( "modules/character/sh_traits.lua" ) 
 include( "modules/character/sh_backstories.lua" ) 
 include( "modules/character/sh_character.lua" ) 
 
--- day-time system
+-- Day-time system
 include( "modules/daynight/sh_daytime.lua" ) 
 
--- client global table 
-cl = cl or { localplayer = NULL, stamina = 0, bDisabled = false }
+/* InitPostEntity: Cache LocalPlayer */
+function GM:InitPostEntity()
+    sh.Setup( cl.player )
+
+
+
+
+
+
+
+
+
+    render.RedownloadAllLightmaps( true, false )
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* extended surface rendering */
 local surface = surface
@@ -183,9 +269,26 @@ end
 
 /* StartCommand: Allows you to change the players inputs before they are processed by the server. */
 function GM:StartCommand( ply, CUserCmd )
+    cl.localplayer = LocalPlayer()
+
     cl.stamina = ply:GetNWInt( "Stamina", 0 )
 
     if cl.stamina < 1 then
         CUserCmd:RemoveKey( IN_SPEED )
     end
 end
+
+
+
+/* Net message receivers */
+
+-- Update character data 
+net.Receive( "s2c.char-upd", function()
+
+
+end )
+
+-- Redownload light maps after light style update
+net.Receive( "s2c.update-ls", function()
+    render.RedownloadAllLightmaps( true, false )
+end )

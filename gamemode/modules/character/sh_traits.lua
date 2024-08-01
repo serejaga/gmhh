@@ -184,19 +184,17 @@ local PLAYER = FindMetaTable( "Player" )
 
 -- Set trait bits 
 function PLAYER:SetTraits( iTraits )
-    self:SetNWInt( "Traits", iTraits )
+    self:SetSharedVariable( "Traits", iTraits, 32 )
 end
 
 -- Get trait bits
 function PLAYER:GetTraits()
-    return self:GetNWInt( "Traits", 0 )
+    return self.Traits or 0
 end
 
 -- Check for trait 
 function PLAYER:HasTrait( iTrait )
-    local iTraits = self:GetNWInt( "Traits", 0 )
-
-    return bit.band( iTraits, iTrait ) == iTrait 
+    return bit.band( self.Traits, iTrait ) == iTrait 
 end 
 
 -- Give random traits 
@@ -219,3 +217,5 @@ function PLAYER:GiveRandomTraits()
     -- Set traits
     self:SetTraits( iTraits )
 end 
+
+sh.AddUInt( "Traits", 0, 32 )

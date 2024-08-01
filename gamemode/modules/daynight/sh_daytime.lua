@@ -1,10 +1,6 @@
 /* Day time system */
 local iTime, flPrevTime = 720, 0
 
-if SERVER then
-    util.AddNetworkString( "hh.update-ls" )
-end
-
 -- Painted skybox changes 
 local SkyPaint = ents.FindByClass( "env_skypaint" )[ 1 ]
 local EnvSun = ents.FindByClass( "env_sun" )[ 1 ]
@@ -168,21 +164,9 @@ function gm.ProcessTime()
     if PrevLightStyle != mCycle.Style then
         engine.LightStyle( 0, mCycle.Style )
 
-        net.Start( "hh.update-ls" )
+        net.Start( "s2c.update-ls" )
         net.Broadcast()
 
         PrevLightStyle = mCycle.Style
     end
 end
-  
--- Client side modulation 
-if not CLIENT then
-    return 
-end
-
--- light-style values
-local function RedownloadLightmaps()
-    render.RedownloadAllLightmaps( true, false )
-end
-
-net.Receive( "hh.update-ls", RedownloadLightmaps )

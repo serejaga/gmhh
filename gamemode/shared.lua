@@ -3,6 +3,43 @@ GM.Author 	= "replica"
 GM.Email 	= "@surelyreplica"
 GM.Website 	= "github.com/serejaga"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Store frequently used variables, functions */
 local PLAYER = FindMetaTable( "Player" )
 local ENTITY = FindMetaTable( "Entity" )

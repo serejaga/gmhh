@@ -12,8 +12,7 @@ function PLAYER:GenerateCharacter()
 
     -- Give character random backstory 
     local Backstory = Backstories[ math.random( 1, #Backstories ) ]
-    PrintTable(Backstory)
-
+    
     -- Backstory related model 
     if Backstory.models then
         mModel = Backstory.models[ math.random( 1, #Backstory.models ) ]
@@ -44,7 +43,6 @@ function PLAYER:GenerateCharacter()
         iNumTraits = iNumTraits + 1
     end   
 
-    print( iNumTraits, strTraits )
     local msg = iNumTraits > 1 and string.format( "%s has %s traits.", self:Name(), strTraits ) or iNumTraits > 0 and string.format( "%s has %s trait.", self:Name(), strTraits )
         or string.format( "%s has no special traits.", self:Name() ) 
  
